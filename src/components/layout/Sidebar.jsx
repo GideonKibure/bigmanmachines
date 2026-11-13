@@ -15,17 +15,17 @@ import {
 } from 'lucide-react'
 
 export const navLinks = [
-  { to: '/admin', label: 'Overview', icon: LayoutDashboard, end: true, roles: ['admin', 'employee'] },
-  { to: '/admin/customers', label: 'Customers', icon: Users, roles: ['admin'] },
-  { to: '/admin/quotations', label: 'Quotations', icon: FileText, roles: ['admin'] },
-  { to: '/admin/orders', label: 'Orders', icon: ClipboardList, roles: ['admin'] },
-  { to: '/admin/projects', label: 'Projects', icon: Hammer, roles: ['admin', 'employee'] },
-  { to: '/admin/inventory', label: 'Inventory', icon: Package, roles: ['admin', 'employee'] },
-  { to: '/admin/finance', label: 'Finance', icon: Wallet, roles: ['admin'] },
-  { to: '/admin/reports', label: 'Reports', icon: ChartColumn, roles: ['admin'] },
-  { to: '/admin/catalog', label: 'Website', icon: Globe, roles: ['admin'] },
-  { to: '/admin/employees', label: 'Team', icon: HardHat, roles: ['admin'] },
-  { to: '/admin/settings', label: 'Settings', icon: Settings, roles: ['admin'] },
+  { to: '/admin', label: 'Muhtasari', icon: LayoutDashboard, end: true, roles: ['admin', 'employee'] },
+  { to: '/admin/customers', label: 'Wateja', icon: Users, roles: ['admin'] },
+  { to: '/admin/quotations', label: 'Makadirio', icon: FileText, roles: ['admin'] },
+  { to: '/admin/orders', label: 'Oda', icon: ClipboardList, roles: ['admin'] },
+  { to: '/admin/projects', label: 'Miradi', icon: Hammer, roles: ['admin', 'employee'] },
+  { to: '/admin/inventory', label: 'Hifadhi', icon: Package, roles: ['admin', 'employee'] },
+  { to: '/admin/finance', label: 'Fedha', icon: Wallet, roles: ['admin'] },
+  { to: '/admin/reports', label: 'Ripoti', icon: ChartColumn, roles: ['admin'] },
+  { to: '/admin/catalog', label: 'Tovuti', icon: Globe, roles: ['admin'] },
+  { to: '/admin/employees', label: 'Timu', icon: HardHat, roles: ['admin'] },
+  { to: '/admin/settings', label: 'Mipangilio', icon: Settings, roles: ['admin'] },
 ]
 
 export default function Sidebar({ role, open, onClose }) {
@@ -33,7 +33,7 @@ export default function Sidebar({ role, open, onClose }) {
 
   return (
     <>
-      {open && <button type="button" className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={onClose} aria-label="Close menu" />}
+      {open && <button type="button" className="fixed inset-0 z-30 bg-black/60 lg:hidden" onClick={onClose} aria-label="Funga menyu" />}
       <aside
         className={`fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-white/10 bg-ink text-white transition lg:static lg:translate-x-0 ${
           open ? 'translate-x-0' : '-translate-x-full'
@@ -41,9 +41,9 @@ export default function Sidebar({ role, open, onClose }) {
       >
         <div className="flex items-center justify-between px-5 py-5">
           <NavLink to="/" className="font-display text-xl uppercase tracking-wide text-white">
-            Workshop
+            Karakana
           </NavLink>
-          <button type="button" className="text-zinc-400 lg:hidden" onClick={onClose} aria-label="Close">
+          <button type="button" className="text-zinc-400 lg:hidden" onClick={onClose} aria-label="Funga">
             <X size={18} />
           </button>
         </div>

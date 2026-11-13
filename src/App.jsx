@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './contexts/AuthContext'
+import { LanguageProvider } from './contexts/LanguageContext'
 import { SettingsProvider } from './contexts/SettingsContext'
 import ScrollReveal from './components/common/ScrollReveal'
 import AppRoutes from './routes/AppRoutes'
@@ -8,7 +9,8 @@ import AppRoutes from './routes/AppRoutes'
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <LanguageProvider>
+        <AuthProvider>
         <SettingsProvider>
           <AppRoutes />
           <ScrollReveal />
@@ -23,7 +25,8 @@ export default function App() {
             }}
           />
         </SettingsProvider>
-      </AuthProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </BrowserRouter>
   )
 }

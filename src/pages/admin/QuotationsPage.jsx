@@ -21,13 +21,13 @@ export default function QuotationsPage() {
   return (
     <div>
       <PageHeader
-        title="Quotations"
-        text="Incoming requests stay separate from the priced quotation you send."
-        action={<Link to="/admin/quotations/new" className={buttonClass('primary')}>New quotation</Link>}
+        title="Makadirio"
+        text="Maombi yanayoingia hubaki tofauti na makadirio yenye bei unayotuma."
+        action={<Link to="/admin/quotations/new" className={buttonClass('primary')}>Makadirio mapya</Link>}
       />
       <div className="mb-4 flex gap-2">
-        <Button type="button" variant={tab === 'requests' ? 'primary' : 'surface'} onClick={() => setTab('requests')}>Requests</Button>
-        <Button type="button" variant={tab === 'quotes' ? 'primary' : 'surface'} onClick={() => setTab('quotes')}>Priced quotations</Button>
+        <Button type="button" variant={tab === 'requests' ? 'primary' : 'surface'} onClick={() => setTab('requests')}>Maombi</Button>
+        <Button type="button" variant={tab === 'quotes' ? 'primary' : 'surface'} onClick={() => setTab('quotes')}>Makadirio yenye bei</Button>
       </div>
       {active.loading && <Spinner />}
       {active.error && <p className="text-sm text-red-700">{errorText(active.error)}</p>}
@@ -35,13 +35,13 @@ export default function QuotationsPage() {
         <DataTable
           rows={requests.data || []}
           rowKey={(row) => row.id}
-          empty="No quotation requests yet"
+          empty="Bado hakuna maombi ya bei"
           columns={[
-            { key: 'ref', header: 'Reference', cell: (row) => <Link className="text-accent" to={`/admin/requests/${row.id}`}>{row.reference_number}</Link> },
-            { key: 'who', header: 'Customer', cell: (row) => row.customer_name },
-            { key: 'title', header: 'Work', cell: (row) => row.project_title },
-            { key: 'date', header: 'Received', cell: (row) => formatDate(row.created_at) },
-            { key: 'status', header: 'Status', cell: (row) => <StatusBadge status={row.status} list={REQUEST_STATUSES} /> },
+            { key: 'ref', header: 'Nambari', cell: (row) => <Link className="text-accent" to={`/admin/requests/${row.id}`}>{row.reference_number}</Link> },
+            { key: 'who', header: 'Mteja', cell: (row) => row.customer_name },
+            { key: 'title', header: 'Kazi', cell: (row) => row.project_title },
+            { key: 'date', header: 'Imepokelewa', cell: (row) => formatDate(row.created_at) },
+            { key: 'status', header: 'Hali', cell: (row) => <StatusBadge status={row.status} list={REQUEST_STATUSES} /> },
           ]}
         />
       )}
@@ -49,13 +49,13 @@ export default function QuotationsPage() {
         <DataTable
           rows={quotes.data || []}
           rowKey={(row) => row.id}
-          empty="No priced quotations yet"
+          empty="Bado hakuna makadirio yenye bei"
           columns={[
-            { key: 'no', header: 'Number', cell: (row) => <Link className="text-accent" to={`/admin/quotations/${row.id}`}>{row.quotation_number}</Link> },
-            { key: 'who', header: 'Customer', cell: (row) => row.customers?.full_name },
-            { key: 'title', header: 'Title', cell: (row) => row.title },
-            { key: 'total', header: 'Total', cell: (row) => formatMoney(row.total, settings.currency_code) },
-            { key: 'status', header: 'Status', cell: (row) => <StatusBadge status={row.status} list={QUOTE_STATUSES} /> },
+            { key: 'no', header: 'Nambari', cell: (row) => <Link className="text-accent" to={`/admin/quotations/${row.id}`}>{row.quotation_number}</Link> },
+            { key: 'who', header: 'Mteja', cell: (row) => row.customers?.full_name },
+            { key: 'title', header: 'Kichwa', cell: (row) => row.title },
+            { key: 'total', header: 'Jumla', cell: (row) => formatMoney(row.total, settings.currency_code) },
+            { key: 'status', header: 'Hali', cell: (row) => <StatusBadge status={row.status} list={QUOTE_STATUSES} /> },
           ]}
         />
       )}

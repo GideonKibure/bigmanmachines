@@ -2,7 +2,7 @@ import EmptyState from './EmptyState'
 
 export default function DataTable({ columns, rows, rowKey, empty }) {
   if (!rows?.length) {
-    return <EmptyState title={empty || 'Nothing here yet'} />
+    return <EmptyState title={empty || 'Hakuna kitu bado'} />
   }
 
   return (

@@ -10,7 +10,7 @@ import { listTransactions, reportOrders, reportProjects } from '../../services/f
 import { listMovements } from '../../services/inventory'
 import { downloadCsv } from '../../utils/csv'
 import { errorText, formatDate, formatMoney, num, todayInput } from '../../utils/format'
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, labelOf } from '../../utils/labels'
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, labelOf, STOCK_MOVEMENTS } from '../../utils/labels'
 
 function monthStart() {
   const date = new Date()
@@ -96,7 +96,7 @@ export default function ReportsPage() {
     stock: movementRows.map((row) => ({
       Date: formatDate(row.created_at),
       Material: row.inventory_items?.name,
-      Type: row.movement_type,
+      Type: labelOf(STOCK_MOVEMENTS, row.movement_type),
       Quantity: num(row.quantity),
       Note: row.note,
     })),
@@ -120,27 +120,27 @@ export default function ReportsPage() {
   return (
     <div className="print-sheet">
       <PageHeader
-        title="Reports"
-        text="Figures come from saved transactions, orders, and stock movements."
+        title="Ripoti"
+        text="Nambari zinatoka kwenye miamala, oda, na mienendo ya stoo iliyohifadhiwa."
         action={
           <span className="no-print flex gap-2">
-            <Button type="button" variant="surface" onClick={() => window.print()}>Print</Button>
-            <Button type="button" variant="surface" onClick={() => downloadCsv(`${section}-${from}.csv`, sections[section])}>Download CSV</Button>
+            <Button type="button" variant="surface" onClick={() => window.print()}>Chapisha</Button>
+            <Button type="button" variant="surface" onClick={() => downloadCsv(`${section}-${from}.csv`, sections[section])}>Pakua CSV</Button>
           </span>
         }
       />
       <div className="no-print mb-4 flex flex-wrap gap-3">
-        <Field label="From"><input className={inputClass} type="date" value={from} onChange={(event) => setFrom(event.target.value)} /></Field>
-        <Field label="To"><input className={inputClass} type="date" value={to} onChange={(event) => setTo(event.target.value)} /></Field>
+        <Field label="Kuanzia"><input className={inputClass} type="date" value={from} onChange={(event) => setFrom(event.target.value)} /></Field>
+        <Field label="Hadi"><input className={inputClass} type="date" value={to} onChange={(event) => setTo(event.target.value)} /></Field>
       </div>
       <div className="no-print mb-4 flex flex-wrap gap-2">
         {[
-          ['sales', 'Daily sales'],
-          ['expenses', 'Expenses'],
-          ['profit', 'Project profit'],
-          ['stock', 'Stock movements'],
+          ['sales', 'Mauzo ya kila siku'],
+          ['expenses', 'Matumizi'],
+          ['profit', 'Faida ya mradi'],
+          ['stock', 'Mienendo ya stoo'],
           ['outstanding', 'Outstanding'],
-          ['completed', 'Completed projects'],
+          ['completed', 'Miradi iliyokamilika'],
         ].map(([key, label]) => (
           <Button key={key} type="button" variant={section === key ? 'primary' : 'surface'} onClick={() => setSection(key)}>{label}</Button>
         ))}
@@ -148,56 +148,56 @@ export default function ReportsPage() {
       {loading && <Spinner />}
       {error && <p className="text-sm text-red-700">{errorText(error)}</p>}
       {!loading && section === 'sales' && (
-        <DataTable rows={sales} rowKey={(row) => row.date} empty="No sales in this period" columns={[
-          { key: 'date', header: 'Date', cell: (row) => formatDate(row.date) },
-          { key: 'amount', header: 'Cash received', cell: (row) => money(row.amount) },
+        <DataTable rows={sales} rowKey={(row) => row.date} empty="Hakuna mauzo katika kipindi hiki" columns={[
+          { key: 'date', header: 'Tarehe', cell: (row) => formatDate(row.date) },
+          { key: 'amount', header: 'Pesa iliyopokelewa', cell: (row) => money(row.amount) },
         ]} />
       )}
       {!loading && section === 'expenses' && (
         <DataTable
           rows={inRange.filter((row) => row.type === 'expense')}
           rowKey={(row) => row.id}
-          empty="No expenses in this period"
+          empty="Hakuna matumizi katika kipindi hiki"
           columns={[
-            { key: 'date', header: 'Date', cell: (row) => formatDate(row.transaction_date) },
-            { key: 'category', header: 'Category', cell: (row) => labelOf(EXPENSE_CATEGORIES, row.category) },
-            { key: 'amount', header: 'Amount', cell: (row) => money(row.amount) },
+            { key: 'date', header: 'Tarehe', cell: (row) => formatDate(row.transaction_date) },
+            { key: 'category', header: 'Kundi', cell: (row) => labelOf(EXPENSE_CATEGORIES, row.category) },
+            { key: 'amount', header: 'Kiasi', cell: (row) => money(row.amount) },
           ]}
         />
       )}
       {!loading && section === 'profit' && (
-        <DataTable rows={profitRows} rowKey={(row) => row.project} empty="No projects" columns={[
-          { key: 'project', header: 'Project', cell: (row) => row.project },
-          { key: 'price', header: 'Job price', cell: (row) => money(row.price) },
-          { key: 'materials', header: 'Materials', cell: (row) => money(row.materials) },
-          { key: 'labour', header: 'Labour', cell: (row) => money(row.labour) },
-          { key: 'profit', header: 'Profit on price', cell: (row) => money(row.profit) },
+        <DataTable rows={profitRows} rowKey={(row) => row.project} empty="Hakuna miradi" columns={[
+          { key: 'project', header: 'Mradi', cell: (row) => row.project },
+          { key: 'price', header: 'Bei ya kazi', cell: (row) => money(row.price) },
+          { key: 'materials', header: 'Vifaa', cell: (row) => money(row.materials) },
+          { key: 'labour', header: 'Kazi', cell: (row) => money(row.labour) },
+          { key: 'profit', header: 'Faida juu ya bei', cell: (row) => money(row.profit) },
         ]} />
       )}
       {!loading && section === 'stock' && (
-        <DataTable rows={movementRows} rowKey={(row) => row.id} empty="No stock movements" columns={[
-          { key: 'date', header: 'Date', cell: (row) => formatDate(row.created_at) },
-          { key: 'name', header: 'Material', cell: (row) => row.inventory_items?.name },
-          { key: 'type', header: 'Type', cell: (row) => row.movement_type },
-          { key: 'qty', header: 'Quantity', cell: (row) => num(row.quantity) },
+        <DataTable rows={movementRows} rowKey={(row) => row.id} empty="Hakuna mienendo ya stoo" columns={[
+          { key: 'date', header: 'Tarehe', cell: (row) => formatDate(row.created_at) },
+          { key: 'name', header: 'Kifaa', cell: (row) => row.inventory_items?.name },
+          { key: 'type', header: 'Aina', cell: (row) => labelOf(STOCK_MOVEMENTS, row.movement_type) },
+          { key: 'qty', header: 'Idadi', cell: (row) => num(row.quantity) },
         ]} />
       )}
       {!loading && section === 'outstanding' && (
-        <DataTable rows={outstanding} rowKey={(row) => row.order} empty="No outstanding balances in the loaded payments" columns={[
-          { key: 'order', header: 'Order', cell: (row) => row.order },
-          { key: 'customer', header: 'Customer', cell: (row) => row.customer },
-          { key: 'balance', header: 'Balance', cell: (row) => money(row.balance) },
+        <DataTable rows={outstanding} rowKey={(row) => row.order} empty="Hakuna deni katika malipo yaliyopakiwa" columns={[
+          { key: 'order', header: 'Oda', cell: (row) => row.order },
+          { key: 'customer', header: 'Mteja', cell: (row) => row.customer },
+          { key: 'balance', header: 'Salio', cell: (row) => money(row.balance) },
         ]} />
       )}
       {!loading && section === 'completed' && (
-        <DataTable rows={completed} rowKey={(row) => row.id} empty="No projects completed in this period" columns={[
-          { key: 'no', header: 'Project', cell: (row) => row.project_number },
-          { key: 'who', header: 'Customer', cell: (row) => row.customers?.full_name },
-          { key: 'date', header: 'Completed', cell: (row) => formatDate(row.completed_at) },
+        <DataTable rows={completed} rowKey={(row) => row.id} empty="Hakuna miradi iliyokamilika katika kipindi hiki" columns={[
+          { key: 'no', header: 'Mradi', cell: (row) => row.project_number },
+          { key: 'who', header: 'Mteja', cell: (row) => row.customers?.full_name },
+          { key: 'date', header: 'Imekamilika', cell: (row) => formatDate(row.completed_at) },
         ]} />
       )}
       <p className="mt-4 text-xs text-muted">
-        Income categories include {INCOME_CATEGORIES.map(([, label]) => label).join(', ')}. Outstanding balances use every recorded payment, not only the selected dates.
+        Makundi ya mapato ni pamoja na {INCOME_CATEGORIES.map(([, label]) => label).join(', ')}. Deni hutumia kila malipo yaliyoandikwa, si tarehe zilizochaguliwa pekee.
       </p>
     </div>
   )

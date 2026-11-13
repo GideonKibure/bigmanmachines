@@ -26,7 +26,7 @@ export default function RequestDetailPage() {
   }, [data])
 
   if (loading) return <Spinner />
-  if (error) return <EmptyState title="Could not open this request" text={errorText(error)} />
+  if (error) return <EmptyState title="Ombi hili halikufunguka" text={errorText(error)} />
 
   async function createCustomer() {
     try {
@@ -35,10 +35,10 @@ export default function RequestDetailPage() {
         phone: data.phone,
         email: data.email || '',
         location: data.location || '',
-        notes: `Created from ${data.reference_number}`,
+        notes: `Imetengenezwa kutoka ${data.reference_number}`,
       })
       await updateRequest(data.id, { customer_id: customer.id, status: 'in_review' })
-      toast.success('Customer created')
+      toast.success('Mteja ametengenezwa')
       reload()
     } catch (saveError) {
       toast.error(errorText(saveError))
@@ -53,7 +53,7 @@ export default function RequestDetailPage() {
     ['Dimensions', data.dimensions || '—'],
     ['Materials', data.preferred_materials || '—'],
     ['Location', data.location || '—'],
-    ['Preferred date', formatDate(data.preferred_completion_date)],
+    ['Tarehe inayotakiwa', formatDate(data.preferred_completion_date)],
   ]
 
   return (
@@ -69,14 +69,14 @@ export default function RequestDetailPage() {
           </div>
         ))}
       </dl>
-      {image && <img src={image} alt="Reference supplied by the customer" className="mt-6 max-h-80 rounded-lg object-contain" />}
+      {image && <img src={image} alt="Rejea aliyotuma mteja" className="mt-6 max-h-80 rounded-lg object-contain" />}
       <div className="mt-6 flex flex-wrap gap-2">
-        {!data.customer_id && <Button type="button" onClick={createCustomer}>Create customer from this request</Button>}
+        {!data.customer_id && <Button type="button" onClick={createCustomer}>Tengeneza mteja kutoka ombi hili</Button>}
         <Link
           to={data.customer_id ? `/admin/quotations/new?request=${data.id}` : '#'}
           className={buttonClass('primary', data.customer_id ? '' : 'pointer-events-none opacity-50')}
         >
-          Build quotation
+          Tengeneza makadirio
         </Link>
         {data.status !== 'closed' && (
           <Button
@@ -84,11 +84,11 @@ export default function RequestDetailPage() {
             variant="surface"
             onClick={async () => {
               await updateRequest(data.id, { status: 'closed' })
-              toast.success('Request closed')
+              toast.success('Ombi limefungwa')
               reload()
             }}
           >
-            Close request
+            Funga ombi
           </Button>
         )}
       </div>

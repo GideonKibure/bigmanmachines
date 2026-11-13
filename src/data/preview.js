@@ -27,6 +27,8 @@ export const defaultSettings = {
   currency_code: 'TZS',
   facebook: '',
   instagram: '',
+  tiktok: '',
+  social_visible: { whatsapp: true, facebook: true, instagram: true, tiktok: true },
   stat_years: '10+',
   stat_projects: '120+',
   hero_image_url: sparks,

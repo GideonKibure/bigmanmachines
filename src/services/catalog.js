@@ -6,6 +6,18 @@ function published(rows, flag, includeHidden) {
   return rows.filter((row) => row[flag])
 }
 
+async function saveWithEnglish(table, payload) {
+  const client = requireClient()
+  const { english, ...rest } = payload
+  const { data, error } = await client.from(table).upsert(rest).select().single()
+  if (error) throw error
+  if (english) {
+    const extra = await client.from(table).update({ english }).eq('id', data.id)
+    if (extra.error) throw extra.error
+  }
+  return data
+}
+
 export async function listServices({ includeHidden = false } = {}) {
   if (!supabase) return published(previewServices, 'is_active', includeHidden)
   let query = supabase.from('services').select('*').order('sort_order')
@@ -16,7 +28,6 @@ export async function listServices({ includeHidden = false } = {}) {
 }
 
 export async function saveService(values) {
-  const client = requireClient()
   const payload = {
     name: values.name,
     slug: values.slug,
@@ -25,14 +36,13 @@ export async function saveService(values) {
     description: values.description || '',
     image_url: values.image_url || '',
     highlights: values.highlights || [],
+    english: values.english || {},
     is_featured: Boolean(values.is_featured),
     is_active: values.is_active !== false,
     sort_order: Number(values.sort_order || 0),
   }
   if (values.id) payload.id = values.id
-  const { data, error } = await client.from('services').upsert(payload).select().single()
-  if (error) throw error
-  return data
+  return saveWithEnglish('services', payload)
 }
 
 export async function setServiceActive(id, isActive) {
@@ -51,7 +61,6 @@ export async function listProducts({ includeHidden = false } = {}) {
 }
 
 export async function saveProduct(values) {
-  const client = requireClient()
   const payload = {
     name: values.name,
     slug: values.slug,
@@ -60,13 +69,12 @@ export async function saveProduct(values) {
     price: values.price === '' || values.price === null || values.price === undefined ? null : Number(values.price),
     availability: values.availability || 'made_to_order',
     specifications: values.specifications || {},
+    english: values.english || {},
     is_featured: Boolean(values.is_featured),
     is_active: values.is_active !== false,
   }
   if (values.id) payload.id = values.id
-  const { data, error } = await client.from('products').upsert(payload).select().single()
-  if (error) throw error
-  return data
+  return saveWithEnglish('products', payload)
 }
 
 export async function setProductActive(id, isActive) {
@@ -102,23 +110,21 @@ export async function savePortfolioProject(values) {
     cover_image_url: values.cover_image_url || values.image_url || '',
     is_featured: Boolean(values.is_featured),
     is_published: values.is_published !== false,
+    english: values.english || {},
   }
   if (values.id) project.id = values.id
-  const { data, error } = await client.from('portfolio_projects').upsert(project).select().single()
-  if (error) throw error
-  if (images.length) {
-    await client.from('portfolio_images').delete().eq('portfolio_project_id', data.id)
-    const rows = images
-      .filter((image) => image.image_url)
-      .map((image, index) => ({
-        portfolio_project_id: data.id,
-        image_url: image.image_url,
-        sort_order: index + 1,
-      }))
-    if (rows.length) {
-      const insert = await client.from('portfolio_images').insert(rows)
-      if (insert.error) throw insert.error
-    }
+  const data = await saveWithEnglish('portfolio_projects', project)
+  await client.from('portfolio_images').delete().eq('portfolio_project_id', data.id)
+  const rows = images
+    .filter((image) => image.image_url)
+    .map((image, index) => ({
+      portfolio_project_id: data.id,
+      image_url: image.image_url,
+      sort_order: index + 1,
+    }))
+  if (rows.length) {
+    const insert = await client.from('portfolio_images').insert(rows)
+    if (insert.error) throw insert.error
   }
   return data
 }
@@ -131,6 +137,15 @@ export async function setPortfolioPublished(id, isPublished) {
 
 export async function updateSettings(values) {
   const client = requireClient()
-  const { error } = await client.from('business_settings').update(values).eq('id', 1)
+  const { english, tiktok, social_visible, ...rest } = values
+  const { error } = await client.from('business_settings').update(rest).eq('id', 1)
   if (error) throw error
+  if (english) {
+    const extra = await client.from('business_settings').update({ english }).eq('id', 1)
+    if (extra.error) throw extra.error
+  }
+  if (tiktok !== undefined || social_visible) {
+    const social = await client.from('business_settings').update({ tiktok: tiktok || '', social_visible: social_visible || {} }).eq('id', 1)
+    if (social.error) throw social.error
+  }
 }

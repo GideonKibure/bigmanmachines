@@ -12,15 +12,15 @@ export default function QuotationPrintPage() {
   const { data, loading, error } = useLoad(() => getQuotation(id), [id])
 
   if (loading) return <Spinner />
-  if (error) return <EmptyState title="Could not open this quotation" text={errorText(error)} />
+  if (error) return <EmptyState title="Makadirio haya hayakufunguka" text={errorText(error)} />
 
   const money = (value) => formatMoney(value, settings.currency_code)
 
   return (
     <div className="min-h-screen bg-white px-6 py-8 text-zinc-900">
       <div className="no-print mb-6 flex gap-3">
-        <button type="button" onClick={() => window.print()} className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white">Print</button>
-        <Link to={`/admin/quotations/${id}`} className="rounded-md border px-4 py-2 text-sm">Back</Link>
+        <button type="button" onClick={() => window.print()} className="rounded-md bg-zinc-900 px-4 py-2 text-sm text-white">Chapisha</button>
+        <Link to={`/admin/quotations/${id}`} className="rounded-md border px-4 py-2 text-sm">Rudi</Link>
       </div>
       <header className="flex items-start justify-between gap-6 border-b pb-4">
         <div>
@@ -32,7 +32,7 @@ export default function QuotationPrintPage() {
         <div className="text-right text-sm">
           <p className="text-lg font-semibold">{data.quotation_number}</p>
           <p>Date {formatDate(data.created_at)}</p>
-          <p>Valid until {formatDate(data.valid_until)}</p>
+          <p>Inatumika hadi {formatDate(data.valid_until)}</p>
         </div>
       </header>
       <section className="mt-6 text-sm">
@@ -45,10 +45,10 @@ export default function QuotationPrintPage() {
       <table className="mt-6 w-full text-left text-sm">
         <thead>
           <tr className="border-b">
-            <th className="py-2">Description</th>
-            <th>Qty</th>
-            <th>Unit</th>
-            <th className="text-right">Amount</th>
+            <th className="py-2">Maelezo</th>
+            <th>Idadi</th>
+            <th>Kipimo</th>
+            <th className="text-right">Kiasi</th>
           </tr>
         </thead>
         <tbody>
@@ -62,8 +62,8 @@ export default function QuotationPrintPage() {
           ))}
         </tbody>
       </table>
-      <p className="mt-4 text-right text-xl font-bold">Amount due {money(data.total)}</p>
-      <p className="mt-10 text-sm">This quotation is for the work described above. Work starts after you accept it.</p>
+      <p className="mt-4 text-right text-xl font-bold">Kiasi kinachotakiwa {money(data.total)}</p>
+      <p className="mt-10 text-sm">Makadirio haya ni ya kazi iliyoelezwa hapo juu. Kazi huanza baada ya kuyakubali.</p>
     </div>
   )
 }

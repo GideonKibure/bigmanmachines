@@ -15,18 +15,18 @@ export default function ProjectsPage() {
 
   return (
     <div>
-      <PageHeader title="Projects" text="Fabrication jobs and the stage they are in." />
+      <PageHeader title="Miradi" text="Kazi za uundaji na hatua zilizo." />
       <DataTable
         rows={data || []}
         rowKey={(row) => row.id}
-        empty="No projects yet"
+        empty="Bado hakuna miradi"
         columns={[
-          { key: 'no', header: 'Project', cell: (row) => <Link className="text-accent" to={`/admin/projects/${row.id}`}>{row.project_number}</Link> },
-          { key: 'who', header: 'Customer', cell: (row) => row.customers?.full_name },
-          { key: 'who2', header: 'Assigned', cell: (row) => row.employees?.full_name || 'Unassigned' },
-          { key: 'due', header: 'Due', cell: (row) => formatDate(row.expected_completion_date) },
-          { key: 'progress', header: 'Progress', cell: (row) => `${row.progress_percent}%` },
-          { key: 'status', header: 'Status', cell: (row) => <StatusBadge status={row.status} list={PROJECT_STATUSES} /> },
+          { key: 'no', header: 'Mradi', cell: (row) => <Link className="text-accent" to={`/admin/projects/${row.id}`}>{row.project_number}</Link> },
+          { key: 'who', header: 'Mteja', cell: (row) => row.customers?.full_name },
+          { key: 'who2', header: 'Aliyepangiwa', cell: (row) => row.employees?.full_name || 'Hajapangiwa' },
+          { key: 'due', header: 'Mwisho', cell: (row) => formatDate(row.expected_completion_date) },
+          { key: 'progress', header: 'Maendeleo', cell: (row) => `${row.progress_percent}%` },
+          { key: 'status', header: 'Hali', cell: (row) => <StatusBadge status={row.status} list={PROJECT_STATUSES} /> },
         ]}
       />
     </div>

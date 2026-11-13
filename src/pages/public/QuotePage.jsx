@@ -4,11 +4,13 @@ import toast from 'react-hot-toast'
 import Button from '../../components/common/Button'
 import Field, { inputClass } from '../../components/common/Field'
 import PageHeader from '../../components/common/PageHeader'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useSettings } from '../../contexts/SettingsContext'
 import { listServices } from '../../services/catalog'
 import { submitQuote } from '../../services/quotes'
 import { errorText, whatsappLink } from '../../utils/format'
 import { validateImage, validateQuote } from '../../utils/validators'
+import { localizeService } from '../../utils/swahili'
 
 const empty = {
   customer_name: '',
@@ -26,21 +28,22 @@ const empty = {
 
 export default function QuotePage() {
   const { settings, configured } = useSettings()
+  const { lang } = useLanguage()
   const [params] = useSearchParams()
   const [form, setForm] = useState(empty)
   const [errors, setErrors] = useState({})
   const [file, setFile] = useState(null)
-  const [types, setTypes] = useState(['Custom metal fabrication'])
+  const [types, setTypes] = useState(['Uundaji maalum wa chuma'])
   const [saving, setSaving] = useState(false)
   const [result, setResult] = useState(null)
   const [step, setStep] = useState(0)
 
   useEffect(() => {
     listServices().then((services) => {
-      const names = services.map((service) => service.name)
-      setTypes(names.length ? names : ['Custom metal fabrication'])
+      const names = services.map((service) => localizeService(service, lang).name)
+      setTypes(names.length ? names : [lang === 'en' ? 'Custom metal fabrication' : 'Uundaji maalum wa chuma'])
     })
-  }, [])
+  }, [lang])
 
   useEffect(() => {
     const product = params.get('product')
@@ -48,8 +51,8 @@ export default function QuotePage() {
     setForm((current) => ({
       ...current,
       project_title: product || service || current.project_title,
-      fabrication_type: service || current.fabrication_type || (product ? 'Custom metal fabrication' : ''),
-      description: product ? `Order for ${product}.` : current.description,
+      fabrication_type: service || current.fabrication_type || (product ? 'Uundaji maalum wa chuma' : ''),
+      description: product ? `Oda ya ${product}.` : current.description,
     }))
   }, [params])
 
@@ -86,7 +89,7 @@ export default function QuotePage() {
     try {
       const response = await submitQuote(form, file)
       setResult(response)
-      toast.success('Quotation request sent')
+      toast.success('Ombi la bei limetumwa')
     } catch (error) {
       toast.error(errorText(error))
     } finally {
@@ -95,19 +98,19 @@ export default function QuotePage() {
   }
 
   if (result) {
-    const link = whatsappLink(settings.whatsapp || settings.phone, `Hello, my quotation reference is ${result.reference_number}.`)
+    const link = whatsappLink(settings.whatsapp || settings.phone, `Habari, nambari ya ombi langu ni ${result.reference_number}.`)
     return (
       <div className="mx-auto max-w-xl px-5 py-20 text-center">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Request received</p>
-        <h1 className="mt-3 font-display text-5xl uppercase">We have your brief</h1>
-        <p className="mt-4 text-muted">Keep this reference. The workshop will use it when the quotation is prepared.</p>
+        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Ombi limepokelewa</p>
+        <h1 className="mt-3 font-display text-5xl uppercase">Tumepokea maelezo yako</h1>
+        <p className="mt-4 text-muted">Hifadhi nambari hii. Karakana itaitumia wakati wa kuandaa makadirio.</p>
         <p className="mt-6 font-display text-4xl text-accent">{result.reference_number}</p>
         {link ? (
           <a href={link} target="_blank" rel="noreferrer" className="mt-8 inline-block rounded-md bg-accent px-4 py-2.5 text-sm font-semibold text-white">
-            Message us on WhatsApp
+            Tutumie ujumbe WhatsApp
           </a>
         ) : (
-          <p className="mt-6 text-sm text-muted">A WhatsApp number can be added in workshop settings.</p>
+          <p className="mt-6 text-sm text-muted">Nambari ya WhatsApp inaweza kuongezwa kwenye mipangilio.</p>
         )}
       </div>
     )
@@ -116,17 +119,17 @@ export default function QuotePage() {
   return (
     <div className="mx-auto max-w-3xl px-5 py-14">
       <PageHeader
-        eyebrow="Quotation"
-        title="Tell us what to build"
-        text="You do not need an account. We will price the job before any steel is cut."
+        eyebrow="Makadirio"
+        title="Tuambie cha kutengeneza"
+        text="Huhitaji akaunti. Tutaweka bei kabla ya chuma kukatiwa."
       />
       {!configured && (
         <p className="mb-4 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-          This preview cannot save the request until Supabase is connected.
+          Onyesho hili haliwezi kuhifadhi ombi hadi Supabase iunganishwe.
         </p>
       )}
       <div className="mb-4 grid grid-cols-3 gap-2">
-        {['Contact', 'The job', 'Details'].map((label, index) => (
+        {['Mawasiliano', 'Kazi', 'Maelezo'].map((label, index) => (
           <button
             key={label}
             type="button"
@@ -140,14 +143,14 @@ export default function QuotePage() {
       <form onSubmit={onSubmit} className="grid gap-4 rounded-lg border border-line bg-card p-5 md:grid-cols-2">
         {step === 0 && (
           <>
-            <Field label="Your name" error={errors.customer_name}>
+            <Field label="Jina lako" error={errors.customer_name}>
               <input className={inputClass} value={form.customer_name} onChange={(event) => set('customer_name', event.target.value)} />
             </Field>
-            <Field label="Phone" error={errors.phone}>
+            <Field label="Simu" error={errors.phone}>
               <input className={inputClass} value={form.phone} onChange={(event) => set('phone', event.target.value)} />
             </Field>
             <div className="md:col-span-2">
-              <Field label="Email (optional)" error={errors.email}>
+              <Field label="Barua pepe (si lazima)" error={errors.email}>
                 <input className={inputClass} value={form.email} onChange={(event) => set('email', event.target.value)} />
               </Field>
             </div>
@@ -155,22 +158,22 @@ export default function QuotePage() {
         )}
         {step === 1 && (
           <>
-            <Field label="Project title" error={errors.project_title}>
+            <Field label="Jina la kazi" error={errors.project_title}>
               <input className={inputClass} value={form.project_title} onChange={(event) => set('project_title', event.target.value)} />
             </Field>
-            <Field label="Type of fabrication" error={errors.fabrication_type}>
+            <Field label="Aina ya kazi" error={errors.fabrication_type}>
               <select className={inputClass} value={form.fabrication_type} onChange={(event) => set('fabrication_type', event.target.value)}>
-                <option value="">Choose</option>
+                <option value="">Chagua</option>
                 {types.map((type) => (
                   <option key={type}>{type}</option>
                 ))}
               </select>
             </Field>
-            <Field label="Quantity" error={errors.quantity}>
+            <Field label="Idadi" error={errors.quantity}>
               <input className={inputClass} type="number" min="1" value={form.quantity} onChange={(event) => set('quantity', event.target.value)} />
             </Field>
             <div className="md:col-span-2">
-              <Field label="Project description" error={errors.description}>
+              <Field label="Maelezo ya kazi" error={errors.description}>
                 <textarea className={inputClass} rows={4} value={form.description} onChange={(event) => set('description', event.target.value)} />
               </Field>
             </div>
@@ -178,20 +181,20 @@ export default function QuotePage() {
         )}
         {step === 2 && (
           <>
-            <Field label="Dimensions and measurements">
+            <Field label="Vipimo">
               <input className={inputClass} value={form.dimensions} onChange={(event) => set('dimensions', event.target.value)} />
             </Field>
-            <Field label="Preferred materials">
+            <Field label="Vifaa unavyopendelea">
               <input className={inputClass} value={form.preferred_materials} onChange={(event) => set('preferred_materials', event.target.value)} />
             </Field>
-            <Field label="Location">
+            <Field label="Mahali">
               <input className={inputClass} value={form.location} onChange={(event) => set('location', event.target.value)} />
             </Field>
-            <Field label="Preferred completion date">
+            <Field label="Tarehe unayotaka kukamilika">
               <input className={inputClass} type="date" value={form.preferred_completion_date} onChange={(event) => set('preferred_completion_date', event.target.value)} />
             </Field>
             <div className="md:col-span-2">
-              <Field label="Reference image or drawing" hint="JPG, PNG, or WebP. 5 MB maximum." error={errors.image}>
+              <Field label="Picha au mchoro" hint="JPG, PNG, au WebP. Si zaidi ya MB 5." error={errors.image}>
                 <input
                   className="text-sm text-muted"
                   type="file"
@@ -205,12 +208,12 @@ export default function QuotePage() {
         )}
         <div className="flex flex-wrap gap-2 md:col-span-2">
           {step > 0 && (
-            <Button type="button" variant="surface" onClick={() => setStep((value) => value - 1)}>Back</Button>
+            <Button type="button" variant="surface" onClick={() => setStep((value) => value - 1)}>Rudi</Button>
           )}
           {step < 2 ? (
-            <Button type="button" onClick={() => showStep(step + 1)}>Continue</Button>
+            <Button type="button" onClick={() => showStep(step + 1)}>Endelea</Button>
           ) : (
-            <Button type="submit" disabled={saving}>{saving ? 'Sending…' : 'Submit request'}</Button>
+            <Button type="submit" disabled={saving}>{saving ? 'Inatuma…' : 'Tuma ombi'}</Button>
           )}
         </div>
       </form>

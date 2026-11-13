@@ -17,7 +17,7 @@ export function formatDate(value) {
   if (!value) return '—'
   if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     const [year, month, day] = value.split('-').map(Number)
-    return new Date(year, month - 1, day).toLocaleDateString('en-GB', {
+    return new Date(year, month - 1, day).toLocaleDateString('sw-TZ', {
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -25,7 +25,7 @@ export function formatDate(value) {
   }
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return '—'
-  return date.toLocaleDateString('en-GB', {
+  return date.toLocaleDateString('sw-TZ', {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
@@ -47,11 +47,23 @@ export function whatsappLink(phone, text) {
 }
 
 export function errorText(error) {
-  if (!error) return 'Something went wrong.'
-  if (error.code === '23505') return 'That record already exists.'
-  if (error.code === '23503') return 'This record is linked to other data and cannot be removed.'
-  const message = error.message || 'Something went wrong.'
-  if (message.includes('Not enough stock')) return 'There is not enough of that material in stock.'
-  if (message.includes('Not allowed')) return 'You do not have permission to do that.'
+  if (!error) return 'Kuna hitilafu.'
+  if (error.code === '23505') return 'Rekodi hiyo ipo tayari.'
+  if (error.code === '23503') return 'Rekodi hii imeunganishwa na data nyingine na haiwezi kufutwa.'
+  const message = error.message || 'Kuna hitilafu.'
+  if (message.includes('Not enough stock')) return 'Vifaa hivyo havitoshi stoo.'
+  if (message.includes('Not allowed')) return 'Huna ruhusa ya kufanya hivyo.'
+  if (message.includes('Quotation not found')) return 'Makadirio hayakupatikana.'
+  if (message.includes('Accept the quotation')) return 'Kubali makadirio kabla ya kutengeneza oda.'
+  if (message.includes('already has an order')) return 'Makadirio haya tayari yana oda.'
+  if (message.includes('Invalid login credentials')) return 'Barua pepe au nenosiri si sahihi.'
+  if (message.includes('Email not confirmed')) return 'Barua pepe haijathibitishwa.'
+  if (message.includes("Could not find the 'english' column")) {
+    return 'Endesha faili ya SQL 004_bilingual.sql kwenye Supabase, kisha hifadhi tena.'
+  }
+  if (message.includes('tiktok') || message.includes('social_visible')) {
+    return 'Endesha faili ya SQL 005_socials.sql kwenye Supabase, kisha hifadhi tena.'
+  }
+  if (message.includes('Connect Supabase before uploading')) return 'Unganisha Supabase kabla ya kupakia picha.'
   return message
 }

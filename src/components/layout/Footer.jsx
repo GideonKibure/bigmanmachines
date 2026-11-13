@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useSettings } from '../../contexts/SettingsContext'
 import { whatsappLink } from '../../utils/format'
 
@@ -20,6 +21,13 @@ function SocialIcon({ type }) {
       </svg>
     )
   }
+  if (type === 'tiktok') {
+    return (
+      <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
+        <path d="M14.5 3c.4 2.4 1.8 4.1 4.1 4.4v2.4c-1.4 0-2.7-.4-4-1.2v6.7a5.8 5.8 0 1 1-5.8-5.8c.3 0 .6 0 .9.1v2.6a3.2 3.2 0 1 0 2.3 3.1V3h2.5z" />
+      </svg>
+    )
+  }
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4 fill-current" aria-hidden="true">
       <path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm5 4.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm6.2-.9a1 1 0 1 0 1 1 1 1 0 0 0-1-1zM12 9.2A2.8 2.8 0 1 1 9.2 12 2.8 2.8 0 0 1 12 9.2z" />
@@ -28,30 +36,29 @@ function SocialIcon({ type }) {
 }
 
 function SocialLink({ type, label, href }) {
-  const className = 'inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-sm text-zinc-200 transition hover:-translate-y-0.5 hover:border-accent hover:text-white'
-  const content = (
-    <>
+  return (
+    <a href={href} target="_blank" rel="noreferrer" aria-label={label} className="inline-flex items-center gap-2 rounded-full border border-white/15 px-3 py-1.5 text-sm text-zinc-200 transition hover:-translate-y-0.5 hover:border-accent hover:text-white">
       <SocialIcon type={type} />
       {label}
-    </>
-  )
-  if (!href) {
-    return (
-      <span className={`${className} cursor-default opacity-60 hover:translate-y-0 hover:border-white/15 hover:text-zinc-200`} title={`Add the ${label} link in Settings`}>
-        {content}
-      </span>
-    )
-  }
-  return (
-    <a href={href} target="_blank" rel="noreferrer" aria-label={label} className={className}>
-      {content}
     </a>
   )
 }
 
 export default function Footer() {
   const { settings } = useSettings()
+  const { lang } = useLanguage()
+  const text = lang === 'en'
+    ? { services: 'Services', all: 'All services', work: 'Completed work', products: 'Ready-made products', quote: 'Request a quote', contact: 'Contact', phone: 'Add a phone number in settings.', social: 'Social' }
+    : { services: 'Huduma', all: 'Huduma zote', work: 'Kazi zilizokamilika', products: 'Bidhaa tayari', quote: 'Omba bei', contact: 'Mawasiliano', phone: 'Ongeza nambari ya simu kwenye mipangilio.', social: 'Mitandao' }
+  const visible = settings.social_visible || {}
+  const show = (key) => visible[key] !== false
   const whatsapp = whatsappLink(settings.whatsapp || settings.phone)
+  const socials = [
+    show('whatsapp') && whatsapp ? { type: 'whatsapp', label: 'WhatsApp', href: whatsapp } : null,
+    show('facebook') && settings.facebook ? { type: 'facebook', label: 'Facebook', href: settings.facebook } : null,
+    show('instagram') && settings.instagram ? { type: 'instagram', label: 'Instagram', href: settings.instagram } : null,
+    show('tiktok') && settings.tiktok ? { type: 'tiktok', label: 'TikTok', href: settings.tiktok } : null,
+  ].filter(Boolean)
 
   return (
     <footer className="bg-ink text-zinc-300">
@@ -61,23 +68,23 @@ export default function Footer() {
           <p className="mt-3 text-sm text-zinc-400">{settings.tagline}</p>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Services</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{text.services}</p>
           <div className="mt-3 flex flex-col gap-2 text-sm">
-            <Link to="/services" className="hover:text-white">All services</Link>
-            <Link to="/projects" className="hover:text-white">Completed work</Link>
-            <Link to="/products" className="hover:text-white">Ready-made products</Link>
-            <Link to="/quote" className="hover:text-white">Request a quote</Link>
+            <Link to="/services" className="hover:text-white">{text.all}</Link>
+            <Link to="/projects" className="hover:text-white">{text.work}</Link>
+            <Link to="/products" className="hover:text-white">{text.products}</Link>
+            <Link to="/quote" className="hover:text-white">{text.quote}</Link>
           </div>
         </div>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Contact</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{text.contact}</p>
           <div className="mt-3 space-y-2 text-sm">
             {settings.phone ? (
               <a className="flex items-center gap-2 hover:text-white" href={`tel:${settings.phone}`}>
                 <Phone size={15} /> {settings.phone}
               </a>
             ) : (
-              <p className="text-zinc-400">Add a phone number in settings.</p>
+              <p className="text-zinc-400">{text.phone}</p>
             )}
             {settings.email && (
               <a className="flex items-center gap-2 hover:text-white" href={`mailto:${settings.email}`}>
@@ -90,14 +97,16 @@ export default function Footer() {
               </p>
             )}
           </div>
-          <div className="mt-5">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">Social</p>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <SocialLink type="whatsapp" label="WhatsApp" href={whatsapp} />
-              <SocialLink type="facebook" label="Facebook" href={settings.facebook} />
-              <SocialLink type="instagram" label="Instagram" href={settings.instagram} />
+          {socials.length > 0 && (
+            <div className="mt-5">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{text.social}</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {socials.map((item) => (
+                  <SocialLink key={item.type} type={item.type} label={item.label} href={item.href} />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <div className="border-t border-white/10 px-5 py-4 text-center text-xs text-zinc-500">

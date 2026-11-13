@@ -51,7 +51,7 @@ export default function FinancePage() {
     }
     try {
       await recordTransaction(form, file)
-      toast.success('Transaction saved')
+      toast.success('Muamala umehifadhiwa')
       setForm({ ...form, amount: '', description: '' })
       setFile(null)
       setTick((value) => value + 1)
@@ -62,70 +62,70 @@ export default function FinancePage() {
 
   return (
     <div>
-      <PageHeader title="Finance" text="Cash that has actually moved. Outstanding balances stay on the customer and order pages." />
+      <PageHeader title="Fedha" text="Pesa ambayo imesogea kweli. Deni hubaki kwenye kurasa za mteja na oda." />
       <div className="mb-6 grid gap-3 sm:grid-cols-3">
-        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Income</p><p className="text-2xl">{money(income)}</p></article>
-        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Expenses</p><p className="text-2xl">{money(expenses)}</p></article>
-        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Net cash</p><p className="text-2xl">{money(income - expenses)}</p></article>
+        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Mapato</p><p className="text-2xl">{money(income)}</p></article>
+        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Matumizi</p><p className="text-2xl">{money(expenses)}</p></article>
+        <article className="rounded-lg border border-line bg-card p-4"><p className="text-xs uppercase text-muted">Pesa halisi</p><p className="text-2xl">{money(income - expenses)}</p></article>
       </div>
       <form onSubmit={onSubmit} className="mb-8 grid gap-3 rounded-lg border border-line bg-card p-4 md:grid-cols-3">
-        <Field label="Type">
+        <Field label="Aina">
           <select className={inputClass} value={form.type} onChange={(event) => setForm({ ...form, type: event.target.value, category: event.target.value === 'income' ? 'other_income' : 'other_expense' })}>
-            <option value="income">Income</option>
-            <option value="expense">Expense</option>
+            <option value="income">Mapato</option>
+            <option value="expense">Matumizi</option>
           </select>
         </Field>
-        <Field label="Category">
+        <Field label="Kundi">
           <select className={inputClass} value={form.category} onChange={(event) => setForm({ ...form, category: event.target.value })}>
             {categories.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </Field>
-        <Field label="Amount"><input className={inputClass} required type="number" min="1" step="0.01" value={form.amount} onChange={(event) => setForm({ ...form, amount: event.target.value })} /></Field>
-        <Field label="Date"><input className={inputClass} type="date" value={form.transaction_date} onChange={(event) => setForm({ ...form, transaction_date: event.target.value })} /></Field>
-        <Field label="Method">
+        <Field label="Kiasi"><input className={inputClass} required type="number" min="1" step="0.01" value={form.amount} onChange={(event) => setForm({ ...form, amount: event.target.value })} /></Field>
+        <Field label="Tarehe"><input className={inputClass} type="date" value={form.transaction_date} onChange={(event) => setForm({ ...form, transaction_date: event.target.value })} /></Field>
+        <Field label="Njia">
           <select className={inputClass} value={form.payment_method} onChange={(event) => setForm({ ...form, payment_method: event.target.value })}>
             {PAYMENT_METHODS.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </Field>
-        <Field label="Description"><input className={inputClass} value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} /></Field>
-        <Field label="Customer">
+        <Field label="Maelezo"><input className={inputClass} value={form.description} onChange={(event) => setForm({ ...form, description: event.target.value })} /></Field>
+        <Field label="Mteja">
           <select className={inputClass} value={form.customer_id} onChange={(event) => setForm({ ...form, customer_id: event.target.value })}>
-            <option value="">None</option>
+            <option value="">Hakuna</option>
             {(customers.data || []).map((customer) => <option key={customer.id} value={customer.id}>{customer.full_name}</option>)}
           </select>
         </Field>
-        <Field label="Order">
+        <Field label="Oda">
           <select className={inputClass} value={form.order_id} onChange={(event) => setForm({ ...form, order_id: event.target.value })}>
-            <option value="">None</option>
+            <option value="">Hakuna</option>
             {(orders.data || []).map((order) => <option key={order.id} value={order.id}>{order.order_number}</option>)}
           </select>
         </Field>
-        <Field label="Project">
+        <Field label="Mradi">
           <select className={inputClass} value={form.project_id} onChange={(event) => setForm({ ...form, project_id: event.target.value })}>
-            <option value="">None</option>
+            <option value="">Hakuna</option>
             {(projects.data || []).map((project) => <option key={project.id} value={project.id}>{project.project_number}</option>)}
           </select>
         </Field>
-        <Field label="Receipt or invoice">
+        <Field label="Risiti au ankara">
           <input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={(event) => setFile(event.target.files?.[0] || null)} />
         </Field>
-        <div className="md:col-span-3"><Button type="submit">Save transaction</Button></div>
+        <div className="md:col-span-3"><Button type="submit">Hifadhi muamala</Button></div>
       </form>
       <div className="mb-3 flex gap-2">
-        <Button type="button" variant={type === 'income' ? 'primary' : 'surface'} onClick={() => setType('income')}>Income</Button>
-        <Button type="button" variant={type === 'expense' ? 'primary' : 'surface'} onClick={() => setType('expense')}>Expenses</Button>
+        <Button type="button" variant={type === 'income' ? 'primary' : 'surface'} onClick={() => setType('income')}>Mapato</Button>
+        <Button type="button" variant={type === 'expense' ? 'primary' : 'surface'} onClick={() => setType('expense')}>Matumizi</Button>
       </div>
       {transactions.loading ? <Spinner /> : (
         <DataTable
           rows={rows.filter((row) => row.type === type)}
           rowKey={(row) => row.id}
-          empty="No transactions yet"
+          empty="Bado hakuna miamala"
           columns={[
-            { key: 'date', header: 'Date', cell: (row) => formatDate(row.transaction_date) },
-            { key: 'category', header: 'Category', cell: (row) => labelOf(row.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES, row.category) },
-            { key: 'desc', header: 'Description', cell: (row) => row.description || '—' },
-            { key: 'who', header: 'Linked', cell: (row) => row.customers?.full_name || row.orders?.order_number || row.projects?.project_number || '—' },
-            { key: 'amount', header: 'Amount', cell: (row) => money(row.amount) },
+            { key: 'date', header: 'Tarehe', cell: (row) => formatDate(row.transaction_date) },
+            { key: 'category', header: 'Kundi', cell: (row) => labelOf(row.type === 'income' ? INCOME_CATEGORIES : EXPENSE_CATEGORIES, row.category) },
+            { key: 'desc', header: 'Maelezo', cell: (row) => row.description || '—' },
+            { key: 'who', header: 'Imeunganishwa', cell: (row) => row.customers?.full_name || row.orders?.order_number || row.projects?.project_number || '—' },
+            { key: 'amount', header: 'Kiasi', cell: (row) => money(row.amount) },
           ]}
         />
       )}

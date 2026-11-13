@@ -17,17 +17,17 @@ export default function OrdersPage() {
 
   return (
     <div>
-      <PageHeader title="Orders" text="An order is created when a quotation is accepted." />
+      <PageHeader title="Oda" text="Oda hutengenezwa makadirio yanapokubaliwa." />
       <DataTable
         rows={data || []}
         rowKey={(row) => row.id}
-        empty="No orders yet"
+        empty="Bado hakuna oda"
         columns={[
-          { key: 'no', header: 'Order', cell: (row) => <Link className="text-accent" to={`/admin/orders/${row.id}`}>{row.order_number}</Link> },
-          { key: 'who', header: 'Customer', cell: (row) => row.customers?.full_name },
-          { key: 'price', header: 'Agreed price', cell: (row) => formatMoney(row.agreed_price, settings.currency_code) },
-          { key: 'due', header: 'Due', cell: (row) => formatDate(row.expected_completion_date) },
-          { key: 'status', header: 'Status', cell: (row) => <StatusBadge status={row.status} list={ORDER_STATUSES} /> },
+          { key: 'no', header: 'Oda', cell: (row) => <Link className="text-accent" to={`/admin/orders/${row.id}`}>{row.order_number}</Link> },
+          { key: 'who', header: 'Mteja', cell: (row) => row.customers?.full_name },
+          { key: 'price', header: 'Bei iliyokubaliwa', cell: (row) => formatMoney(row.agreed_price, settings.currency_code) },
+          { key: 'due', header: 'Mwisho', cell: (row) => formatDate(row.expected_completion_date) },
+          { key: 'status', header: 'Hali', cell: (row) => <StatusBadge status={row.status} list={ORDER_STATUSES} /> },
         ]}
       />
     </div>

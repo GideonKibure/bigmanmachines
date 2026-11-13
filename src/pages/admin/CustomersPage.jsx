@@ -26,7 +26,7 @@ export default function CustomersPage() {
     event.preventDefault()
     try {
       await saveCustomer(form)
-      toast.success('Customer saved')
+      toast.success('Mteja amehifadhiwa')
       setForm(null)
       setTick((value) => value + 1)
     } catch (saveError) {
@@ -37,14 +37,14 @@ export default function CustomersPage() {
   return (
     <div>
       <PageHeader
-        title="Customers"
-        text="People and businesses you quote and build for."
-        action={<Button type="button" onClick={() => setForm(blank)}>Add customer</Button>}
+        title="Wateja"
+        text="Watu na biashara unazowapa bei na kuwajengea."
+        action={<Button type="button" onClick={() => setForm(blank)}>Ongeza mteja</Button>}
       />
       <div className="mb-4 flex flex-wrap gap-2">
-        <input className={`${inputClass} max-w-xs`} placeholder="Search name or phone" value={search} onChange={(event) => setSearch(event.target.value)} />
+        <input className={`${inputClass} max-w-xs`} placeholder="Tafuta jina au simu" value={search} onChange={(event) => setSearch(event.target.value)} />
         <Button type="button" variant="surface" onClick={() => setArchived((value) => !value)}>
-          {archived ? 'Showing archived' : 'Show archived'}
+          {archived ? 'Unaona waliohifadhiwa' : 'Onyesha waliohifadhiwa'}
         </Button>
       </div>
       {loading && <Spinner />}
@@ -53,11 +53,11 @@ export default function CustomersPage() {
         <DataTable
           rows={data || []}
           rowKey={(row) => row.id}
-          empty="No customers yet"
+          empty="Bado hakuna wateja"
           columns={[
-            { key: 'name', header: 'Name', cell: (row) => <Link className="text-accent" to={`/admin/customers/${row.id}`}>{row.full_name}</Link> },
-            { key: 'phone', header: 'Phone', cell: (row) => row.phone },
-            { key: 'location', header: 'Location', cell: (row) => row.location || '—' },
+            { key: 'name', header: 'Jina', cell: (row) => <Link className="text-accent" to={`/admin/customers/${row.id}`}>{row.full_name}</Link> },
+            { key: 'phone', header: 'Simu', cell: (row) => row.phone },
+            { key: 'location', header: 'Mahali', cell: (row) => row.location || '—' },
             {
               key: 'actions',
               header: '',
@@ -74,28 +74,28 @@ export default function CustomersPage() {
           ]}
         />
       )}
-      <Modal open={Boolean(form)} title={form?.id ? 'Edit customer' : 'New customer'} onClose={() => setForm(null)}>
+      <Modal open={Boolean(form)} title={form?.id ? 'Hariri mteja' : 'Mteja mpya'} onClose={() => setForm(null)}>
         {form && (
           <form onSubmit={onSave} className="space-y-3">
-            <Field label="Name"><input className={inputClass} required value={form.full_name} onChange={(event) => setForm({ ...form, full_name: event.target.value })} /></Field>
-            <Field label="Phone"><input className={inputClass} required value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></Field>
-            <Field label="Email"><input className={inputClass} value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></Field>
-            <Field label="Location"><input className={inputClass} value={form.location} onChange={(event) => setForm({ ...form, location: event.target.value })} /></Field>
-            <Field label="Notes"><textarea className={inputClass} rows={3} value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} /></Field>
-            <Button type="submit">Save customer</Button>
+            <Field label="Jina"><input className={inputClass} required value={form.full_name} onChange={(event) => setForm({ ...form, full_name: event.target.value })} /></Field>
+            <Field label="Simu"><input className={inputClass} required value={form.phone} onChange={(event) => setForm({ ...form, phone: event.target.value })} /></Field>
+            <Field label="Barua pepe"><input className={inputClass} value={form.email} onChange={(event) => setForm({ ...form, email: event.target.value })} /></Field>
+            <Field label="Mahali"><input className={inputClass} value={form.location} onChange={(event) => setForm({ ...form, location: event.target.value })} /></Field>
+            <Field label="Maelezo"><textarea className={inputClass} rows={3} value={form.notes} onChange={(event) => setForm({ ...form, notes: event.target.value })} /></Field>
+            <Button type="submit">Hifadhi mteja</Button>
           </form>
         )}
       </Modal>
       <ConfirmDialog
         open={Boolean(confirm)}
-        title={confirm?.archived_at ? 'Restore customer' : 'Archive customer'}
-        text={confirm?.archived_at ? 'This customer will show in the active list again.' : 'Archived customers stay on old orders but drop off the active list.'}
+        title={confirm?.archived_at ? 'Rudisha mteja' : 'Hifadhi mteja kando'}
+        text={confirm?.archived_at ? 'Mteja huyu atarudi kwenye orodha hai.' : 'Wateja waliohifadhiwa hubaki kwenye oda za zamani lakini hutoka kwenye orodha hai.'}
         confirmLabel={confirm?.archived_at ? 'Restore' : 'Archive'}
         onCancel={() => setConfirm(null)}
         onConfirm={async () => {
           try {
             await setCustomerArchived(confirm.id, !confirm.archived_at)
-            toast.success('Customer updated')
+            toast.success('Mteja amesasishwa')
             setConfirm(null)
             setTick((value) => value + 1)
           } catch (archiveError) {

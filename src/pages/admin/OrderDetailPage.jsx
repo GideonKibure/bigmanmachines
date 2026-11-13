@@ -60,7 +60,7 @@ export default function OrderDetailPage() {
     try {
       await updateOrder(order.id, { status })
       if (status === 'delivered') await addDelivery(order.id, delivery)
-      toast.success('Order updated')
+      toast.success('Oda imesasishwa')
       setTick((value) => value + 1)
     } catch (saveError) {
       toast.error(errorText(saveError))
@@ -85,7 +85,7 @@ export default function OrderDetailPage() {
         },
         file,
       )
-      toast.success('Payment recorded')
+      toast.success('Malipo yameandikwa')
       setPayment({ ...payment, amount: '', description: '' })
       setFile(null)
       setTick((value) => value + 1)
@@ -100,29 +100,29 @@ export default function OrderDetailPage() {
       <p className="mb-4 whitespace-pre-wrap text-sm text-muted">{order.description}</p>
       <div className="grid gap-3 sm:grid-cols-3">
         <article className="rounded-lg border border-line bg-card p-4">
-          <p className="text-xs uppercase text-muted">Agreed price</p>
+          <p className="text-xs uppercase text-muted">Bei iliyokubaliwa</p>
           <p className="mt-1 text-2xl">{money(order.agreed_price)}</p>
         </article>
         <article className="rounded-lg border border-line bg-card p-4">
-          <p className="text-xs uppercase text-muted">Deposit received</p>
+          <p className="text-xs uppercase text-muted">Amana iliyopokelewa</p>
           <p className="mt-1 text-2xl">{money(deposit)}</p>
         </article>
         <article className="rounded-lg border border-line bg-card p-4">
-          <p className="text-xs uppercase text-muted">Balance</p>
+          <p className="text-xs uppercase text-muted">Salio</p>
           <p className="mt-1 text-2xl">{money(num(order.agreed_price) - paid)}</p>
         </article>
       </div>
-      <p className="mt-3 text-sm text-muted">Expected completion {formatDate(order.expected_completion_date)}</p>
+      <p className="mt-3 text-sm text-muted">Tarehe ya kukamilika {formatDate(order.expected_completion_date)}</p>
       {order.projects && (
         <Link to={`/admin/projects/${order.projects.id}`} className="mt-2 inline-block text-sm text-accent">
-          Open project {order.projects.project_number}
+          Fungua mradi {order.projects.project_number}
         </Link>
       )}
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg border border-line bg-card p-4">
-          <h2 className="mb-3 font-display text-2xl uppercase">Status</h2>
-          <Field label="Order status">
+          <h2 className="mb-3 font-display text-2xl uppercase">Hali</h2>
+          <Field label="Hali ya oda">
             <select className={inputClass} value={order.status} onChange={(event) => saveStatus(event.target.value)}>
               {ORDER_STATUSES.map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
@@ -130,47 +130,47 @@ export default function OrderDetailPage() {
             </select>
           </Field>
           <div className="mt-3 grid gap-2">
-            <Field label="Received by, if delivered">
+            <Field label="Aliyepokea, ikiwa imetolewa">
               <input className={inputClass} value={delivery.received_by} onChange={(event) => setDelivery({ ...delivery, received_by: event.target.value })} />
             </Field>
-            <Field label="Delivery notes">
+            <Field label="Maelezo ya utoaji">
               <input className={inputClass} value={delivery.notes} onChange={(event) => setDelivery({ ...delivery, notes: event.target.value })} />
             </Field>
           </div>
         </section>
         <form onSubmit={savePayment} className="space-y-3 rounded-lg border border-line bg-card p-4">
-          <h2 className="font-display text-2xl uppercase">Record payment</h2>
-          <Field label="Amount">
+          <h2 className="font-display text-2xl uppercase">Andika malipo</h2>
+          <Field label="Kiasi">
             <input className={inputClass} required type="number" min="1" step="0.01" value={payment.amount} onChange={(event) => setPayment({ ...payment, amount: event.target.value })} />
           </Field>
-          <Field label="Category">
+          <Field label="Kundi">
             <select className={inputClass} value={payment.category} onChange={(event) => setPayment({ ...payment, category: event.target.value })}>
               {INCOME_CATEGORIES.map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
               ))}
             </select>
           </Field>
-          <Field label="Method">
+          <Field label="Njia">
             <select className={inputClass} value={payment.payment_method} onChange={(event) => setPayment({ ...payment, payment_method: event.target.value })}>
               {PAYMENT_METHODS.map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
               ))}
             </select>
           </Field>
-          <Field label="Date">
+          <Field label="Tarehe">
             <input className={inputClass} type="date" value={payment.transaction_date} onChange={(event) => setPayment({ ...payment, transaction_date: event.target.value })} />
           </Field>
-          <Field label="Note">
+          <Field label="Maelezo">
             <input className={inputClass} value={payment.description} onChange={(event) => setPayment({ ...payment, description: event.target.value })} />
           </Field>
-          <Field label="Receipt">
+          <Field label="Risiti">
             <input type="file" accept="image/jpeg,image/png,image/webp,application/pdf" onChange={(event) => setFile(event.target.files?.[0] || null)} />
           </Field>
-          <Button type="submit">Save payment</Button>
+          <Button type="submit">Hifadhi malipo</Button>
         </form>
       </div>
       <section className="mt-6">
-        <h2 className="mb-2 font-display text-2xl uppercase">Payments</h2>
+        <h2 className="mb-2 font-display text-2xl uppercase">Malipo</h2>
         <div className="space-y-2 text-sm">
           {(order.payments || []).map((row) => (
             <p key={row.id} className="flex justify-between rounded-md border border-line px-3 py-2">
@@ -178,7 +178,7 @@ export default function OrderDetailPage() {
               <span>{money(row.amount)}</span>
             </p>
           ))}
-          {!order.payments?.length && <p className="text-muted">No payments recorded.</p>}
+          {!order.payments?.length && <p className="text-muted">Hakuna malipo yaliyoandikwa.</p>}
         </div>
       </section>
     </div>

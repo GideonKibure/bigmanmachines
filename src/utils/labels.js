@@ -1,63 +1,71 @@
 export const QUOTE_STATUSES = [
-  ['pending', 'Pending'],
-  ['under_review', 'Under review'],
-  ['quotation_sent', 'Quotation sent'],
-  ['accepted', 'Accepted'],
-  ['rejected', 'Rejected'],
-  ['expired', 'Expired'],
+  ['pending', 'Inasubiri'],
+  ['under_review', 'Inakaguliwa'],
+  ['quotation_sent', 'Makadirio yametumwa'],
+  ['accepted', 'Imekubaliwa'],
+  ['rejected', 'Imekataliwa'],
+  ['expired', 'Imeisha muda'],
 ]
 
 export const REQUEST_STATUSES = [
-  ['new', 'New'],
-  ['in_review', 'In review'],
-  ['converted', 'Converted'],
-  ['closed', 'Closed'],
+  ['new', 'Mpya'],
+  ['in_review', 'Inakaguliwa'],
+  ['converted', 'Imegeuzwa'],
+  ['closed', 'Imefungwa'],
 ]
 
 export const ORDER_STATUSES = [
-  ['pending', 'Pending'],
-  ['confirmed', 'Confirmed'],
-  ['in_production', 'In production'],
-  ['ready_for_delivery', 'Ready for delivery'],
-  ['delivered', 'Delivered'],
-  ['cancelled', 'Cancelled'],
+  ['pending', 'Inasubiri'],
+  ['confirmed', 'Imethibitishwa'],
+  ['in_production', 'Inatengenezwa'],
+  ['ready_for_delivery', 'Tayari kwa utoaji'],
+  ['delivered', 'Imetolewa'],
+  ['cancelled', 'Imefutwa'],
 ]
 
 export const PROJECT_STATUSES = [
-  ['active', 'Active'],
-  ['on_hold', 'On hold'],
-  ['completed', 'Completed'],
-  ['cancelled', 'Cancelled'],
+  ['active', 'Hai'],
+  ['on_hold', 'Imesimamishwa'],
+  ['completed', 'Imekamilika'],
+  ['cancelled', 'Imefutwa'],
 ]
 
 export const INCOME_CATEGORIES = [
-  ['deposit', 'Customer deposit'],
-  ['final_payment', 'Final payment'],
-  ['product_sale', 'Product sale'],
-  ['other_income', 'Other income'],
+  ['deposit', 'Amana ya mteja'],
+  ['final_payment', 'Malipo ya mwisho'],
+  ['product_sale', 'Mauzo ya bidhaa'],
+  ['other_income', 'Mapato mengine'],
 ]
 
 export const EXPENSE_CATEGORIES = [
-  ['material_purchase', 'Material purchase'],
-  ['labour', 'Employee labour'],
-  ['transportation', 'Transportation'],
-  ['electricity', 'Electricity'],
-  ['maintenance', 'Equipment maintenance'],
-  ['rent', 'Workshop rent'],
-  ['other_expense', 'Other expense'],
+  ['material_purchase', 'Ununuzi wa vifaa'],
+  ['labour', 'Mishahara'],
+  ['transportation', 'Usafiri'],
+  ['electricity', 'Umeme'],
+  ['maintenance', 'Matengenezo ya vifaa'],
+  ['rent', 'Kodi ya karakana'],
+  ['other_expense', 'Matumizi mengine'],
 ]
 
 export const PAYMENT_METHODS = [
-  ['cash', 'Cash'],
-  ['mobile_money', 'Mobile money'],
-  ['bank', 'Bank'],
-  ['other', 'Other'],
+  ['cash', 'Taslimu'],
+  ['mobile_money', 'Pesa ya simu'],
+  ['bank', 'Benki'],
+  ['other', 'Nyingine'],
+]
+
+export const STOCK_MOVEMENTS = [
+  ['purchase', 'Ununuzi'],
+  ['usage', 'Matumizi'],
+  ['adjustment', 'Marekebisho'],
+  ['allocation', 'Ugawaji'],
+  ['return', 'Marejesho'],
 ]
 
 export const AVAILABILITY = [
-  ['in_stock', 'In stock'],
-  ['made_to_order', 'Made to order'],
-  ['out_of_stock', 'Out of stock'],
+  ['in_stock', 'Ipo stoo'],
+  ['made_to_order', 'Hutengenezwa kwa oda'],
+  ['out_of_stock', 'Haipo stoo'],
 ]
 
 export function labelOf(list, value) {

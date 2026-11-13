@@ -2,18 +2,25 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { buttonClass } from '../common/Button'
+import { useLanguage } from '../../contexts/LanguageContext'
 import { useSettings } from '../../contexts/SettingsContext'
 
-const links = [
-  { to: '/', label: 'Home', end: true },
-  { to: '/services', label: 'Services' },
-  { to: '/projects', label: 'Projects' },
-  { to: '/products', label: 'Products' },
-  { to: '/contact', label: 'Contact' },
-]
+const copy = {
+  sw: { home: 'Nyumbani', services: 'Huduma', projects: 'Miradi', products: 'Bidhaa', contact: 'Wasiliana', quote: 'Omba bei' },
+  en: { home: 'Home', services: 'Services', projects: 'Projects', products: 'Products', contact: 'Contact', quote: 'Get a quote' },
+}
 
 export default function Navbar() {
   const { settings } = useSettings()
+  const { lang, setLang } = useLanguage()
+  const text = copy[lang]
+  const links = [
+    { to: '/', label: text.home, end: true },
+    { to: '/services', label: text.services },
+    { to: '/projects', label: text.projects },
+    { to: '/products', label: text.products },
+    { to: '/contact', label: text.contact },
+  ]
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const mark = (settings.business_name || 'M').trim().charAt(0).toUpperCase()
@@ -48,12 +55,16 @@ export default function Navbar() {
             </NavLink>
           ))}
         </nav>
-        <div className="hidden lg:block">
+        <div className="hidden items-center gap-3 lg:flex">
+          <div className="flex rounded-md border border-line text-xs font-semibold">
+            <button type="button" className={`px-2 py-1 ${lang === 'sw' ? 'bg-accent text-white' : 'text-muted'}`} onClick={() => setLang('sw')}>SW</button>
+            <button type="button" className={`px-2 py-1 ${lang === 'en' ? 'bg-accent text-white' : 'text-muted'}`} onClick={() => setLang('en')}>EN</button>
+          </div>
           <Link to="/quote" className={buttonClass('primary')}>
-            Get a quote
+            {text.quote}
           </Link>
         </div>
-        <button type="button" className="text-ink lg:hidden" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label={open ? 'Close menu' : 'Open menu'}>
+        <button type="button" className="text-ink lg:hidden" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label={open ? 'Funga menyu' : 'Fungua menyu'}>
           {open ? <X /> : <Menu />}
         </button>
       </div>
@@ -71,8 +82,12 @@ export default function Navbar() {
                 {link.label}
               </NavLink>
             ))}
+            <div className="flex gap-2">
+              <button type="button" className={`rounded-md px-3 py-1 text-sm font-semibold ${lang === 'sw' ? 'bg-accent text-white' : 'border border-line'}`} onClick={() => setLang('sw')}>Kiswahili</button>
+              <button type="button" className={`rounded-md px-3 py-1 text-sm font-semibold ${lang === 'en' ? 'bg-accent text-white' : 'border border-line'}`} onClick={() => setLang('en')}>English</button>
+            </div>
             <Link to="/quote" onClick={() => setOpen(false)} className={buttonClass('primary', 'mt-2')}>
-              Get a quote
+              {text.quote}
             </Link>
           </div>
         </div>

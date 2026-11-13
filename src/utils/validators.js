@@ -4,41 +4,41 @@ const MAX_BYTES = 5 * 1024 * 1024
 
 export function validateImage(file) {
   if (!file) return ''
-  if (!IMAGE_TYPES.includes(file.type)) return 'Use a JPG, PNG, or WebP image.'
-  if (file.size > MAX_BYTES) return 'The file must be 5 MB or smaller.'
+  if (!IMAGE_TYPES.includes(file.type)) return 'Tumia picha ya JPG, PNG, au WebP.'
+  if (file.size > MAX_BYTES) return 'Faili isiwe zaidi ya MB 5.'
   return ''
 }
 
 export function validateReceipt(file) {
   if (!file) return ''
-  if (!FILE_TYPES.includes(file.type)) return 'Use a JPG, PNG, WebP, or PDF file.'
-  if (file.size > MAX_BYTES) return 'The file must be 5 MB or smaller.'
+  if (!FILE_TYPES.includes(file.type)) return 'Tumia JPG, PNG, WebP, au PDF.'
+  if (file.size > MAX_BYTES) return 'Faili isiwe zaidi ya MB 5.'
   return ''
 }
 
 export function validateQuote(values) {
   const errors = {}
-  if (!values.customer_name.trim()) errors.customer_name = 'Enter your name.'
+  if (!values.customer_name.trim()) errors.customer_name = 'Andika jina lako.'
   const digits = values.phone.replace(/\D/g, '')
-  if (!values.phone.trim()) errors.phone = 'Enter a phone number.'
-  else if (digits.length < 9) errors.phone = 'Enter a valid phone number.'
+  if (!values.phone.trim()) errors.phone = 'Andika nambari ya simu.'
+  else if (digits.length < 9) errors.phone = 'Andika nambari sahihi ya simu.'
   if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = 'Enter a valid email, or leave it blank.'
+    errors.email = 'Andika barua pepe sahihi, au uache wazi.'
   }
-  if (!values.project_title.trim()) errors.project_title = 'Enter a project title.'
-  if (!values.fabrication_type) errors.fabrication_type = 'Choose a type of work.'
-  if (!values.description.trim()) errors.description = 'Describe the work.'
-  if (!values.quantity || Number(values.quantity) <= 0) errors.quantity = 'Enter a quantity of at least 1.'
+  if (!values.project_title.trim()) errors.project_title = 'Andika jina la kazi.'
+  if (!values.fabrication_type) errors.fabrication_type = 'Chagua aina ya kazi.'
+  if (!values.description.trim()) errors.description = 'Eleza kazi.'
+  if (!values.quantity || Number(values.quantity) <= 0) errors.quantity = 'Andika idadi isiyopungua 1.'
   return errors
 }
 
 export function validateContact(values) {
   const errors = {}
-  if (!values.name.trim()) errors.name = 'Enter your name.'
-  if (values.phone.replace(/\D/g, '').length < 9) errors.phone = 'Enter a valid phone number.'
+  if (!values.name.trim()) errors.name = 'Andika jina lako.'
+  if (values.phone.replace(/\D/g, '').length < 9) errors.phone = 'Andika nambari sahihi ya simu.'
   if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
-    errors.email = 'Enter a valid email, or leave it blank.'
+    errors.email = 'Andika barua pepe sahihi, au uache wazi.'
   }
-  if (!values.message.trim()) errors.message = 'Enter a message.'
+  if (!values.message.trim()) errors.message = 'Andika ujumbe.'
   return errors
 }

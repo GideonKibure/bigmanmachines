@@ -122,7 +122,7 @@ export default function QuotationEditorPage() {
     setSaving(true)
     try {
       const saved = await saveQuotation(payload())
-      toast.success('Quotation saved')
+      toast.success('Makadirio yamehifadhiwa')
       if (!id) navigate(`/admin/quotations/${saved}`, { replace: true })
     } catch (error) {
       toast.error(errorText(error))
@@ -136,7 +136,7 @@ export default function QuotationEditorPage() {
     try {
       const saved = await saveQuotation(payload('accepted'))
       const orderId = await convertQuotation(saved, due)
-      toast.success('Order created')
+      toast.success('Oda imetengenezwa')
       navigate(`/admin/orders/${orderId}`)
     } catch (error) {
       toast.error(errorText(error))
@@ -150,45 +150,50 @@ export default function QuotationEditorPage() {
   return (
     <form onSubmit={onSave}>
       <PageHeader
-        title={id ? 'Edit quotation' : 'New quotation'}
-        text="The amount due is the cost plus margin, unless every line has its own price. Those line prices then become the total."
-        action={id && <Link to={`/admin/quotations/${id}/print`} className="text-sm text-accent">Print</Link>}
+        title={id ? 'Hariri makadirio' : 'Makadirio mapya'}
+        text="Kiasi kinachotakiwa ni gharama pamoja na faida, isipokuwa kila mstari una bei yake. Bei hizo ndizo jumla."
+        action={id && <Link to={`/admin/quotations/${id}/print`} className="text-sm text-accent">Chapisha</Link>}
       />
       <div className="grid gap-4 lg:grid-cols-2">
-        <Field label="Customer">
+        <Field label="Mteja">
           <select className={inputClass} required value={form.customer_id} onChange={(event) => setForm({ ...form, customer_id: event.target.value })}>
-            <option value="">Choose</option>
+            <option value="">Chagua</option>
             {customers.map((customer) => (
               <option key={customer.id} value={customer.id}>{customer.full_name}</option>
             ))}
           </select>
         </Field>
-        <Field label="Status">
+        <Field label="Hali">
           <select className={inputClass} value={form.status} onChange={(event) => setForm({ ...form, status: event.target.value })}>
             {QUOTE_STATUSES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
           </select>
         </Field>
-        <Field label="Title">
+        <Field label="Kichwa">
           <input className={inputClass} required value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} />
         </Field>
-        <Field label="Valid until">
+        <Field label="Inatumika hadi">
           <input className={inputClass} type="date" value={form.valid_until || ''} onChange={(event) => setForm({ ...form, valid_until: event.target.value })} />
         </Field>
         <div className="lg:col-span-2">
-          <Field label="Description">
+          <Field label="Maelezo">
             <textarea className={inputClass} rows={3} value={form.description || ''} onChange={(event) => setForm({ ...form, description: event.target.value })} />
           </Field>
         </div>
-        {['material_cost', 'labour_cost', 'transport_cost', 'other_cost'].map((key) => (
-          <Field key={key} label={key.replaceAll('_', ' ')}>
+        {[
+          ['material_cost', 'Gharama ya vifaa'],
+          ['labour_cost', 'Gharama ya kazi'],
+          ['transport_cost', 'Gharama ya usafiri'],
+          ['other_cost', 'Gharama nyingine'],
+        ].map(([key, label]) => (
+          <Field key={key} label={label}>
             <input className={inputClass} type="number" min="0" step="0.01" value={form[key]} onChange={(event) => setForm({ ...form, [key]: event.target.value })} />
           </Field>
         ))}
-        <Field label="Profit margin %" hint={priced.fromItems ? 'Recalculated from the line prices.' : 'Applied to the costs above.'}>
+        <Field label="Asilimia ya faida" hint={priced.fromItems ? 'Imehesabiwa upya kutoka bei za mistari.' : 'Inatumika kwenye gharama zilizo juu.'}>
           <input className={inputClass} type="number" min="0" step="0.01" value={form.profit_margin_percent} onChange={(event) => setForm({ ...form, profit_margin_percent: event.target.value })} />
         </Field>
         <div className="lg:col-span-2">
-          <Field label="Internal notes">
+          <Field label="Maelezo ya ndani">
             <textarea className={inputClass} rows={2} value={form.notes || ''} onChange={(event) => setForm({ ...form, notes: event.target.value })} />
           </Field>
         </div>
@@ -196,36 +201,36 @@ export default function QuotationEditorPage() {
 
       <div className="mt-6 rounded-lg border border-line bg-card p-4">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="font-display text-2xl uppercase">Customer lines</h2>
+          <h2 className="font-display text-2xl uppercase">Mistari ya mteja</h2>
           <Button
             type="button"
             variant="surface"
-            onClick={() => setForm({ ...form, items: [...form.items, { description: '', quantity: 1, unit: 'pcs', unit_price: '' }] })}
+            onClick={() => setForm({ ...form, items: [...form.items, { description: '', quantity: 1, unit: 'vipande', unit_price: '' }] })}
           >
-            Add line
+            Ongeza mstari
           </Button>
         </div>
         <div className="mt-3 space-y-2">
           {form.items.map((item, index) => (
             <div key={index} className="grid gap-2 md:grid-cols-5">
-              <input className={inputClass} placeholder="Description" value={item.description} onChange={(event) => updateItem(index, 'description', event.target.value)} />
+              <input className={inputClass} placeholder="Maelezo" value={item.description} onChange={(event) => updateItem(index, 'description', event.target.value)} />
               <input className={inputClass} type="number" min="0" value={item.quantity} onChange={(event) => updateItem(index, 'quantity', event.target.value)} />
-              <input className={inputClass} placeholder="Unit" value={item.unit} onChange={(event) => updateItem(index, 'unit', event.target.value)} />
-              <input className={inputClass} type="number" min="0" placeholder="Price" value={item.unit_price} onChange={(event) => updateItem(index, 'unit_price', event.target.value)} />
-              <Button type="button" variant="surface" onClick={() => setForm({ ...form, items: form.items.filter((_, itemIndex) => itemIndex !== index) })}>Remove</Button>
+              <input className={inputClass} placeholder="Kipimo" value={item.unit} onChange={(event) => updateItem(index, 'unit', event.target.value)} />
+              <input className={inputClass} type="number" min="0" placeholder="Bei" value={item.unit_price} onChange={(event) => updateItem(index, 'unit_price', event.target.value)} />
+              <Button type="button" variant="surface" onClick={() => setForm({ ...form, items: form.items.filter((_, itemIndex) => itemIndex !== index) })}>Ondoa</Button>
             </div>
           ))}
         </div>
-        <p className="mt-4 text-sm text-muted">Costs {formatMoney(priced.costs, settings.currency_code)}</p>
+        <p className="mt-4 text-sm text-muted">Gharama {formatMoney(priced.costs, settings.currency_code)}</p>
         <p className="font-display text-4xl text-accent">{formatMoney(priced.selling, settings.currency_code)}</p>
       </div>
 
       <div className="mt-6 flex flex-wrap items-end gap-3">
-        <Button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Save quotation'}</Button>
-        <Field label="Expected completion">
+        <Button type="submit" disabled={saving}>{saving ? 'Inahifadhi…' : 'Hifadhi makadirio'}</Button>
+        <Field label="Tarehe ya kukamilika">
           <input className={inputClass} type="date" value={due} onChange={(event) => setDue(event.target.value)} />
         </Field>
-        <Button type="button" variant="surface" disabled={saving} onClick={onConvert}>Accept and create order</Button>
+        <Button type="button" variant="surface" disabled={saving} onClick={onConvert}>Kubali na tengeneza oda</Button>
       </div>
     </form>
   )

@@ -53,6 +53,8 @@ create table business_settings (
   currency_code text not null default 'TZS',
   facebook text not null default '',
   instagram text not null default '',
+  tiktok text not null default '',
+  social_visible jsonb not null default '{"whatsapp":true,"facebook":true,"instagram":true,"tiktok":true}'::jsonb,
   stat_years text not null default '10+',
   stat_projects text not null default '120+',
   hero_image_url text not null default '',
@@ -804,14 +806,14 @@ begin
 
   insert into project_stages (project_id, stage_key, stage_name, sort_order)
   values
-    (project_id, 'design', 'Design and measurements', 1),
-    (project_id, 'materials', 'Material preparation', 2),
-    (project_id, 'cutting', 'Cutting', 3),
-    (project_id, 'welding', 'Welding and assembly', 4),
-    (project_id, 'finishing', 'Grinding and finishing', 5),
-    (project_id, 'painting', 'Painting', 6),
-    (project_id, 'inspection', 'Quality inspection', 7),
-    (project_id, 'delivery', 'Delivery', 8);
+    (project_id, 'design', 'Ubunifu na vipimo', 1),
+    (project_id, 'materials', 'Maandalizi ya vifaa', 2),
+    (project_id, 'cutting', 'Kukata', 3),
+    (project_id, 'welding', 'Kulehemu na kuunganisha', 4),
+    (project_id, 'finishing', 'Kusaga na kumalizia', 5),
+    (project_id, 'painting', 'Rangi', 6),
+    (project_id, 'inspection', 'Ukaguzi wa ubora', 7),
+    (project_id, 'delivery', 'Utoaji', 8);
 
   if quote.quotation_request_id is not null then
     update quotation_requests set status = 'converted' where id = quote.quotation_request_id;

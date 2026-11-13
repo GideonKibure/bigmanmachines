@@ -28,7 +28,7 @@ function AdminHome() {
   const money = (value) => formatMoney(value, settings.currency_code)
 
   if (loading) return <Spinner />
-  if (error) return <EmptyState title="Could not load the dashboard" text={errorText(error)} />
+  if (error) return <EmptyState title="Muhtasari haukuweza kupakiwa" text={errorText(error)} />
 
   const monthly = (data.monthly || []).map((row) => ({
     ...row,
@@ -38,22 +38,22 @@ function AdminHome() {
 
   return (
     <div>
-      <PageHeader eyebrow="Overview" title="Workshop today" text="Cash received is money already in. Agreed orders are the contract value, including amounts customers still owe." />
+      <PageHeader eyebrow="Muhtasari" title="Karakana leo" text="Pesa iliyopokelewa ni fedha zilizoingia. Oda zilizokubaliwa ni thamani ya mkataba, ikiwa ni pamoja na deni lililobaki." />
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <Card label="Cash received" value={money(data.total_revenue)} />
-        <Card label="Expenses" value={money(data.total_expenses)} />
-        <Card label="Cash profit" value={money(data.estimated_profit)} note="Income minus expenses" />
-        <Card label="Outstanding" value={money(data.outstanding_payments)} note="Still owed on orders" />
-        <Card label="Agreed orders" value={money(data.agreed_value)} note="Contract value, not cash" />
-        <Card label="Pending quotations" value={data.pending_quotations} />
-        <Card label="Orders" value={data.approved_orders} note="Not cancelled" />
-        <Card label="Active projects" value={data.active_projects} />
-        <Card label="Completed projects" value={data.completed_projects} />
-        <Card label="Low stock" value={data.low_stock} />
+        <Card label="Pesa iliyopokelewa" value={money(data.total_revenue)} />
+        <Card label="Matumizi" value={money(data.total_expenses)} />
+        <Card label="Faida ya pesa" value={money(data.estimated_profit)} note="Mapato ukiondoa matumizi" />
+        <Card label="Deni" value={money(data.outstanding_payments)} note="Deni lililobaki kwenye oda" />
+        <Card label="Oda zilizokubaliwa" value={money(data.agreed_value)} note="Thamani ya mkataba, si pesa taslimu" />
+        <Card label="Makadirio yanayosubiri" value={data.pending_quotations} />
+        <Card label="Orders" value={data.approved_orders} note="Zisizofutwa" />
+        <Card label="Miradi hai" value={data.active_projects} />
+        <Card label="Miradi iliyokamilika" value={data.completed_projects} />
+        <Card label="Stoo ndogo" value={data.low_stock} />
       </div>
 
       <section className="mt-8 rounded-lg border border-line bg-card p-4">
-        <h2 className="font-display text-2xl uppercase">Monthly cash</h2>
+        <h2 className="font-display text-2xl uppercase">Pesa za mwezi</h2>
         <div className="mt-4 h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={monthly}>
@@ -61,8 +61,8 @@ function AdminHome() {
               <XAxis dataKey="month" stroke="#525252" fontSize={12} />
               <YAxis stroke="#525252" fontSize={12} />
               <Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #e5e5e5', color: '#171717' }} />
-              <Bar dataKey="revenue" name="Cash in" fill="#f97316" />
-              <Bar dataKey="expenses" name="Expenses" fill="#334155" />
+              <Bar dataKey="revenue" name="Pesa ndani" fill="#f97316" />
+              <Bar dataKey="expenses" name="Matumizi" fill="#334155" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -70,7 +70,7 @@ function AdminHome() {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         <section className="rounded-lg border border-line bg-card p-4">
-          <h2 className="font-display text-2xl uppercase">Recent orders</h2>
+          <h2 className="font-display text-2xl uppercase">Oda za hivi karibuni</h2>
           <div className="mt-3 space-y-3">
             {(data.recent_orders || []).map((order) => (
               <Link key={order.id} to={`/admin/orders/${order.id}`} className="flex items-center justify-between gap-3 text-sm">
@@ -81,11 +81,11 @@ function AdminHome() {
                 <StatusBadge status={order.status} list={ORDER_STATUSES} />
               </Link>
             ))}
-            {!data.recent_orders?.length && <p className="text-sm text-muted">No orders yet.</p>}
+            {!data.recent_orders?.length && <p className="text-sm text-muted">Bado hakuna oda.</p>}
           </div>
         </section>
         <section className="rounded-lg border border-line bg-card p-4">
-          <h2 className="font-display text-2xl uppercase">Quotation requests</h2>
+          <h2 className="font-display text-2xl uppercase">Maombi ya bei</h2>
           <div className="mt-3 space-y-3">
             {(data.recent_requests || []).map((request) => (
               <Link key={request.id} to={`/admin/requests/${request.id}`} className="flex items-center justify-between gap-3 text-sm">
@@ -96,11 +96,11 @@ function AdminHome() {
                 <StatusBadge status={request.status} list={REQUEST_STATUSES} />
               </Link>
             ))}
-            {!data.recent_requests?.length && <p className="text-sm text-muted">No requests yet.</p>}
+            {!data.recent_requests?.length && <p className="text-sm text-muted">Bado hakuna maombi.</p>}
           </div>
         </section>
         <section className="rounded-lg border border-line bg-card p-4">
-          <h2 className="font-display text-2xl uppercase">Project progress</h2>
+          <h2 className="font-display text-2xl uppercase">Maendeleo ya miradi</h2>
           <div className="mt-3 space-y-3">
             {(data.project_progress || []).map((project) => (
               <Link key={project.id} to={`/admin/projects/${project.id}`} className="block text-sm">
@@ -113,11 +113,11 @@ function AdminHome() {
                 </div>
               </Link>
             ))}
-            {!data.project_progress?.length && <p className="text-sm text-muted">No active projects.</p>}
+            {!data.project_progress?.length && <p className="text-sm text-muted">Hakuna miradi hai.</p>}
           </div>
         </section>
         <section className="rounded-lg border border-line bg-card p-4">
-          <h2 className="font-display text-2xl uppercase">Inventory alerts</h2>
+          <h2 className="font-display text-2xl uppercase">Tahadhari za stoo</h2>
           <div className="mt-3 space-y-2 text-sm">
             {(data.low_stock_items || []).map((item) => (
               <p key={item.id} className="flex justify-between gap-3">
@@ -125,7 +125,7 @@ function AdminHome() {
                 <span className="text-red-700">{num(item.quantity_available)} / {num(item.minimum_stock)} {item.unit}</span>
               </p>
             ))}
-            {!data.low_stock_items?.length && <p className="text-muted">Stock is above the minimum levels.</p>}
+            {!data.low_stock_items?.length && <p className="text-muted">Stoo iko juu ya kiwango cha chini.</p>}
           </div>
         </section>
       </div>
@@ -136,10 +136,10 @@ function AdminHome() {
 function EmployeeHome() {
   const { data, loading, error } = useLoad(() => listProjects(), [])
   if (loading) return <Spinner />
-  if (error) return <EmptyState title="Could not load your jobs" text={errorText(error)} />
+  if (error) return <EmptyState title="Kazi zako hazikuweza kupakiwa" text={errorText(error)} />
   return (
     <div>
-      <PageHeader title="Your jobs" text="Update the stage when the work moves forward, and record material you use." />
+      <PageHeader title="Kazi zako" text="Badilisha hatua kazi inaposonga, na andika vifaa unavyotumia." />
       <div className="grid gap-3">
         {(data || []).map((project) => (
           <Link key={project.id} to={`/admin/projects/${project.id}`} className="rounded-lg border border-line bg-card p-4">
@@ -155,7 +155,7 @@ function EmployeeHome() {
             </div>
           </Link>
         ))}
-        {!data?.length && <EmptyState title="No jobs assigned yet" text="An administrator assigns work from the project page." />}
+        {!data?.length && <EmptyState title="Bado hujapangiwa kazi" text="Msimamizi hupanga kazi kutoka ukurasa wa mradi." />}
       </div>
     </div>
   )
